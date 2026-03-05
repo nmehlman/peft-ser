@@ -309,12 +309,12 @@ class WhisperSER(nn.Module):
         if length is not None:
             length = self.get_feat_extract_output_lengths(length.detach().cpu())
             # Replace positional embeddings
-            self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:750])
+            self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:1500])
         else:
             # Replace positional embeddings
             length = torch.tensor([len(x[0])])
             length = self.get_feat_extract_output_lengths(length)
-            self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:750])
+            self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:1500])
             
         
 
