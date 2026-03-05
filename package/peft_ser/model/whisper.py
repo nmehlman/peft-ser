@@ -307,13 +307,13 @@ class WhisperSER(nn.Module):
         
         # 2. get length and mask
         if length is not None:
-            length = self._get_feat_extract_output_lengths(length.detach().cpu())
+            length = self.get_feat_extract_output_lengths(length.detach().cpu())
             # Replace positional embeddings
             self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:750])
         else:
             # Replace positional embeddings
             length = torch.tensor([len(x[0])])
-            length = self._get_feat_extract_output_lengths(length)
+            length = self.get_feat_extract_output_lengths(length)
             self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:750])
             
         
