@@ -278,9 +278,11 @@ class WhisperSER(nn.Module):
         assert len(x.shape) == 2, "Input data shape wrong"
         assert len(x[0]) <= 10 * 16000, "SER training was using 10s window frame, please crop your data to 10s"
 
+        max_len = 15*16000
+
         # 1. feature extraction and projections
         if length is not None:
-            max_audio_len = length.max().detach().cpu()
+
             # Append to list for feature_extractor to work
             new_x = list()
             for idx in range(len(length)):
@@ -291,7 +293,7 @@ class WhisperSER(nn.Module):
                 new_x,
                 return_tensors="pt", 
                 sampling_rate=16000,
-                max_length=max_audio_len
+                max_length=max_len
             )
             features = features.input_features.to(x.device)
         else:
@@ -299,7 +301,7 @@ class WhisperSER(nn.Module):
                 x[0].detach().cpu(), 
                 return_tensors="pt", 
                 sampling_rate=16000,
-                max_length=len(x[0])
+                max_length=max_len
             )
             features = features.input_features.to(x.device)
         
@@ -314,6 +316,8 @@ class WhisperSER(nn.Module):
             # Replace positional embeddings
             self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:tmp_length])
             
+        
+
         # 3. transformer encoding features
         features = self.backbone_model.encoder(
             features, output_hidden_states=True
