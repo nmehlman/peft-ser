@@ -278,7 +278,7 @@ class WhisperSER(nn.Module):
         assert len(x.shape) == 2, "Input data shape wrong"
         assert len(x[0]) <= 10 * 16000, "SER training was using 10s window frame, please crop your data to 10s"
 
-        max_len = 15*16000
+        max_len = 30*16000
 
         # 1. feature extraction and projections
         if length is not None:
