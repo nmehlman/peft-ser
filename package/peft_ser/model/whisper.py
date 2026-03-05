@@ -315,6 +315,7 @@ class WhisperSER(nn.Module):
             self.backbone_model.encoder.embed_positions = self.backbone_model.encoder.embed_positions.from_pretrained(self.embed_positions[:tmp_length])
             
         # 3. transformer encoding features
+        print(features.shape)
         features = self.backbone_model.encoder(
             features, output_hidden_states=True
         ).hidden_states
