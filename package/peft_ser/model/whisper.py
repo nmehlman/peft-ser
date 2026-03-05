@@ -273,7 +273,7 @@ class WhisperSER(nn.Module):
         if self.use_conv_output:
             self.model_setting += "_conv_output"
             
-    def forward(self, x, length=None):
+    def forward(self, x, length=None, return_features=False):
         # 0. check input length
         assert len(x.shape) == 2, "Input data shape wrong"
         assert len(x[0]) <= 10 * 16000, "SER training was using 10s window frame, please crop your data to 10s"
@@ -356,7 +356,11 @@ class WhisperSER(nn.Module):
         # 8. Output predictions
         # B x D
         predicted = self.out_layer(features)
-        return predicted
+
+        if return_features:
+            return predicted, features
+        else:
+            return predicted
         
     # From huggingface
     def get_feat_extract_output_lengths(self, input_lengths):

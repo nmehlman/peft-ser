@@ -84,7 +84,7 @@ def _download_from_url(url: str, download_target: str):
                 output.write(buffer)
                 loop.update(len(buffer))
 
-def load_model(pretrained_ser_model, cache_folder: str=str(Path.cwd())):
+def load_model(pretrained_ser_model, cache_folder: str=str(Path.cwd()), map_location='cpu'):
     # /scratch1/tiantiaf/test
     # whisper_base_lora_16_conv_output
     # ser_model.load_model("whisper-base-lora-16-conv", cache_folder="/scratch1/tiantiaf/test")
@@ -142,7 +142,7 @@ def load_model(pretrained_ser_model, cache_folder: str=str(Path.cwd())):
     if not Path.exists(Path(save_path)):
         _download_from_url(url=classifier_url, download_target=save_path)
     with (open(save_path, "rb")) as fp: 
-        checkpoint = torch.load(fp)
+        checkpoint = torch.load(fp, map_location=map_location)
     del save_path
     model.load_state_dict(checkpoint, strict=False)
 
@@ -152,6 +152,6 @@ def load_model(pretrained_ser_model, cache_folder: str=str(Path.cwd())):
         if not Path.exists(Path(lora_path)):
             _download_from_url(url=lora_url, download_target=lora_path)
         with (open(lora_path, "rb")) as fp: 
-            checkpoint = torch.load(fp)
+            checkpoint = torch.load(fp, map_location=map_location)
         model.load_state_dict(checkpoint, strict=False)
     return model
